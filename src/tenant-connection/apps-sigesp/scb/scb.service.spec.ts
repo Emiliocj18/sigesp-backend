@@ -1,7 +1,6 @@
 import { Test } from '@nestjs/testing';
 import { AuthenticatedUser } from '../../../auth/jwt-payload.interface';
 import { ScbService } from './scb.service';
-import { ScbDao } from './dao/scb.dao';
 
 // Prueba unitaria sin BD real: mockea 'ITenantRepositoryFactory' (patrón de los
 // specs existentes de login/datasource).
@@ -21,7 +20,6 @@ describe('ScbService', () => {
     const moduleRef = await Test.createTestingModule({
       providers: [
         ScbService,
-        ScbDao,
         { provide: 'ITenantRepositoryFactory', useValue: repositoryFactory },
       ],
     }).compile();

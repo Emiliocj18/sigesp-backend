@@ -1,14 +1,18 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { AuthenticatedUser } from '../../../auth/jwt-payload.interface';
+import { Banco } from './entities/banco.entity';
 import { BancoListaDto } from './dto/banco-lista.dto';
 import { PaginacionDto } from '../shared/dto/paginacion.dto';
-import { ScbDao } from './dao/scb.dao';
+import { ITenantRepositoryFactory } from '../shared/interfaces/tenant-repository-factory.interface';
 
-// Reglas de negocio del módulo scb (cuentas bancarias). Orquesta y delega el
-// acceso a datos al DAO; no contiene SQL.
+// Reglas de negocio del módulo scb (cuentas bancarias). Consulta el repositorio
+// TypeORM del tenant directamente vía withRepository (B5 reintento + B6 paginación).
 @Injectable()
 export class ScbService {
-  constructor(private readonly scbDao: ScbDao) {}
+  constructor(
+    @Inject('ITenantRepositoryFactory')
+    private readonly repositoryFactory: ITenantRepositoryFactory,
+  ) {}
 
   // Lista los bancos de la BD de la empresa seleccionada en el login.
   async getBancos(
@@ -18,6 +22,21 @@ export class ScbService {
     if (user.tenantId == null) {
       throw new Error('El token no contiene información de la empresa (tenant)');
     }
-    return this.scbDao.findBancos(user.tenantId, query);
+    const bancos = await this.repositoryFactory.withRepository(
+      user.tenantId,
+      Banco,
+      (repo) =>
+        repo.find({
+          order: { idBanco: 'ASC' },
+          take: query?.limit,
+          skip: query?.offset,
+        }),
+    );
+    return bancos.map((banco) => ({
+      idBanco: banco.idBanco,
+      nomban: banco.nomban,
+      dirban: banco.dirban,
+      codsudeban: banco.codsudeban,
+    }));
   }
 }

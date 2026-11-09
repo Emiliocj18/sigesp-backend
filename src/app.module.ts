@@ -8,7 +8,7 @@ import { validateEnv } from './config/validation';
 import { JwtAuthModule } from './auth/jwt-auth.module';
 import { ConnectionsModule } from './poolmanager/connections/connection.module';
 import { LoginModule } from './tenant-connection/login/login.module';
-import { QueriesModule } from './tenant-connection/queries/queries.module';
+import { AppsSigespModule } from './tenant-connection/apps-sigesp/apps-sigesp.module';
 import { RefreshModule } from './auth/refresh/refresh.module';
 
 // Modulo raiz de la aplicacion
@@ -24,7 +24,7 @@ import { RefreshModule } from './auth/refresh/refresh.module';
     JwtAuthModule,
     ConnectionsModule,
     LoginModule,
-    QueriesModule,
+    AppsSigespModule,
     RefreshModule,
   ],
   providers: [

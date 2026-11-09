@@ -3,7 +3,7 @@ import { DatasourceModule } from '../../datasource/datasource.module';
 import { TenantQueryRunner } from './tenant-query.runner';
 import { TenantRepositoryFactory } from './tenant-repository.factory';
 
-// Infra común de la capa queries/: reusa DatasourceModule (DatasourceResolver)
+// Infra común de la capa apps-sigesp/: reusa DatasourceModule (DatasourceResolver)
 // y registra las abstracciones por string token (convención del repo para
 // inyectar interfaces, como 'IDatasourcePasswordVerifier' e 'IUserRepository').
 @Module({
@@ -14,4 +14,4 @@ import { TenantRepositoryFactory } from './tenant-repository.factory';
   ],
   exports: ['ITenantQueryRunner', 'ITenantRepositoryFactory'],
 })
-export class QueriesSharedModule {}
+export class AppsSigespSharedModule {}

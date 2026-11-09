@@ -11,7 +11,7 @@ import { randomUUID } from 'crypto';
 import { ConnectionService } from '../../poolmanager/connections/connection.service';
 import { DatasourceService } from '../datasource/datasource.service';
 import { IDatasourcePasswordVerifier } from '../datasource/interfaces/datasource-password-verifier.interface';
-import { SssUsuario } from '../queries/sss/entities/sss-usuario.entity';
+import { SssUsuario } from '../apps-sigesp/sss/entities/sss-usuario.entity';
 import { CfgEmpresa } from '../datasource/entities/cfg-empresa.entity';
 import { SnoPersonal } from '../datasource/entities/sno-personal.entity';
 import { ConexDto } from './dto/conex.dto';

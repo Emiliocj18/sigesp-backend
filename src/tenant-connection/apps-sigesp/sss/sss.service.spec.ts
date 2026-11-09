@@ -1,7 +1,6 @@
 import { Test } from '@nestjs/testing';
 import { AuthenticatedUser } from '../../../auth/jwt-payload.interface';
 import { SssService } from './sss.service';
-import { SssDao } from './dao/sss.dao';
 
 // Prueba unitaria sin BD real: mockea 'ITenantRepositoryFactory' (patrón de los
 // specs existentes de login/datasource).
@@ -21,7 +20,6 @@ describe('SssService', () => {
     const moduleRef = await Test.createTestingModule({
       providers: [
         SssService,
-        SssDao,
         { provide: 'ITenantRepositoryFactory', useValue: repositoryFactory },
       ],
     }).compile();

@@ -1,14 +1,19 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { AuthenticatedUser } from '../../../auth/jwt-payload.interface';
+import { Solicitud } from './entities/solicitud.entity';
 import { SolicitudListaDto } from './dto/solicitud-lista.dto';
 import { PaginacionDto } from '../shared/dto/paginacion.dto';
-import { SepDao } from './dao/sep.dao';
+import { ITenantRepositoryFactory } from '../shared/interfaces/tenant-repository-factory.interface';
 
-// Reglas de negocio del módulo sep (solicitudes). Orquesta y delega el acceso a
-// datos al DAO; la traducción de estado es regla de negocio del módulo.
+// Reglas de negocio del módulo sep (solicitudes). Consulta el repositorio
+// TypeORM del tenant directamente vía withRepository (B5 + B6); la traducción
+// de estado es regla de negocio del módulo.
 @Injectable()
 export class SepService {
-  constructor(private readonly sepDao: SepDao) {}
+  constructor(
+    @Inject('ITenantRepositoryFactory')
+    private readonly repositoryFactory: ITenantRepositoryFactory,
+  ) {}
 
   // Lista las solicitudes de la BD de la empresa seleccionada en el login.
   async getSolicitudes(
@@ -19,7 +24,16 @@ export class SepService {
       throw new Error('El token no contiene información de la empresa (tenant)');
     }
 
-    const solicitudes = await this.sepDao.findSolicitudes(user.tenantId, query);
+    const solicitudes = await this.repositoryFactory.withRepository(
+      user.tenantId,
+      Solicitud,
+      (repo) =>
+        repo.find({
+          order: { idSolicitud: 'ASC' },
+          take: query?.limit,
+          skip: query?.offset,
+        }),
+    );
     return solicitudes.map((solicitud) => ({
       idSolicitud: solicitud.idSolicitud,
       consol: solicitud.consol,

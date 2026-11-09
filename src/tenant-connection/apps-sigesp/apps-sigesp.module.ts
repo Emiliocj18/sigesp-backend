@@ -8,4 +8,4 @@ import { SssModule } from './sss/sss.module';
 @Module({
   imports: [ScbModule, SepModule, SssModule],
 })
-export class QueriesModule {}
+export class AppsSigespModule {}

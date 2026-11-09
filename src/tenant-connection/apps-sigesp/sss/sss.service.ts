@@ -1,14 +1,18 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { AuthenticatedUser } from '../../../auth/jwt-payload.interface';
+import { SssUsuario } from './entities/sss-usuario.entity';
 import { UsuarioListaDto } from './dto/usuario-lista.dto';
 import { PaginacionDto } from '../shared/dto/paginacion.dto';
-import { SssDao } from './dao/sss.dao';
+import { ITenantRepositoryFactory } from '../shared/interfaces/tenant-repository-factory.interface';
 
-// Reglas de negocio del módulo sss (seguridad). Orquesta y delega el acceso a
-// datos al DAO; no contiene SQL.
+// Reglas de negocio del módulo sss (seguridad). Consulta el repositorio
+// TypeORM del tenant directamente vía withRepository (B5 reintento + B6 paginación).
 @Injectable()
 export class SssService {
-  constructor(private readonly sssDao: SssDao) {}
+  constructor(
+    @Inject('ITenantRepositoryFactory')
+    private readonly repositoryFactory: ITenantRepositoryFactory,
+  ) {}
 
   // Lista los usuarios de la BD de la empresa seleccionada en el login.
   async getUsuarios(
@@ -18,6 +22,20 @@ export class SssService {
     if (user.tenantId == null) {
       throw new Error('El token no contiene información de la empresa (tenant)');
     }
-    return this.sssDao.findUsuarios(user.tenantId, query);
+    const usuarios = await this.repositoryFactory.withRepository(
+      user.tenantId,
+      SssUsuario,
+      (repo) =>
+        repo.find({
+          order: { idUsuario: 'ASC' },
+          take: query?.limit,
+          skip: query?.offset,
+        }),
+    );
+    return usuarios.map((usuario) => ({
+      idUsuario: usuario.idUsuario,
+      codusu: usuario.codusu,
+      usuadm: usuario.usuadm,
+    }));
   }
 }

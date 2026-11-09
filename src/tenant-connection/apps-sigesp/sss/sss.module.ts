@@ -1,13 +1,12 @@
 import { Module } from '@nestjs/common';
-import { QueriesSharedModule } from '../shared/queries-shared.module';
+import { AppsSigespSharedModule } from '../shared/apps-sigesp-shared.module';
 import { SssController } from './sss.controller';
 import { SssService } from './sss.service';
-import { SssDao } from './dao/sss.dao';
 
 // Módulo del prefijo SIGESP sss (seguridad).
 @Module({
-  imports: [QueriesSharedModule],
+  imports: [AppsSigespSharedModule],
   controllers: [SssController],
-  providers: [SssService, SssDao],
+  providers: [SssService],
 })
 export class SssModule {}
