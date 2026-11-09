@@ -1,6 +1,6 @@
 import { IsInt, IsString } from 'class-validator';
 
-// DTO de respuesta: banco de la empresa (tenant) seleccionada en el login
+// DTO de respuesta: banco consultado vía /queries/scb/bancos
 export class BancoListaDto {
   @IsInt()
   idBanco: number;

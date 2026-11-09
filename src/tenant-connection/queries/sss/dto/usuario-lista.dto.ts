@@ -1,6 +1,6 @@
 import { IsInt, IsString } from 'class-validator';
 
-// DTO de respuesta: usuario de la empresa (tenant) seleccionada en el login
+// DTO de respuesta: usuario consultado vía /queries/sss/usuarios
 export class UsuarioListaDto {
   @IsInt()
   idUsuario: number;
@@ -8,6 +8,7 @@ export class UsuarioListaDto {
   @IsString()
   codusu: string;
 
+  // 1 = administrador, 0 = usuario
   @IsInt()
   usuadm: number;
 }

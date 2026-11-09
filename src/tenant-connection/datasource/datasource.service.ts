@@ -1,9 +1,7 @@
 import { Injectable, OnModuleDestroy } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import { Connection } from '../../poolmanager/connections/entities/connection.entity';
-import { SssUsuario } from './entities/sss-usuario.entity';
-import { CfgEmpresa } from './entities/cfg-empresa.entity';
-import { SnoPersonal } from './entities/sno-personal.entity';
+import { TENANT_ENTITIES } from './entities/tenant-entities.registry';
 import { throwDbConnectionError } from '../../shared/errors/database-error';
 
 // B3: límites del pool y de la caché de DataSources.
@@ -38,7 +36,7 @@ export class DatasourceService implements OnModuleDestroy {
       username: conn.login,
       password: conn.password ?? '',
       database: conn.database,
-      entities: [SssUsuario, CfgEmpresa, SnoPersonal],
+      entities: TENANT_ENTITIES,
       synchronize: false,
       // B3: pool de conexiones acotado para no agotar los sockets de la BD del tenant.
       extra: {

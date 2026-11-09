@@ -1,6 +1,6 @@
 import { IsNumber, IsString } from 'class-validator';
 
-// DTO de respuesta: solicitud de la empresa (tenant) seleccionada en el login
+// DTO de respuesta: solicitud consultada vía /queries/sep/solicitudes
 export class SolicitudListaDto {
   @IsNumber()
   idSolicitud: number;

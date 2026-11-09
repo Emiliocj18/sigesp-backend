@@ -24,7 +24,7 @@ export class ConnectionService implements OnModuleDestroy {
   constructor(private readonly connectionRepository: ConnectionRepository) {}
 
   // B2/B4: resolución por solo id (la empresa puede haber sido renombrada) con caché
-  // en memoria (TTL CONNECTION_CACHE_TTL_MS). Usado en login y en el resolver de /tenant/*.
+  // en memoria (TTL CONNECTION_CACHE_TTL_MS). Usado en login y en el resolver de datasources.
   async getConnectionById(connectionId: number): Promise<Connection> {
     const cached = this.cache.get(connectionId); //verifica que exista un registro con ese id en cache
     if (cached && cached.expiresAt > Date.now()) {//Si cache no esta undefined y mientras expiresAt sea mayor a Date.now()
