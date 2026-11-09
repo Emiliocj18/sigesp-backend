@@ -1,12 +1,10 @@
 import { Module } from '@nestjs/common';
-import { AppsSigespSharedModule } from '../shared/apps-sigesp-shared.module';
-import { SssController } from './sss.controller';
-import { SssService } from './sss.service';
+import { UsuarioModule } from './usuario/usuario.module';
 
-// Módulo del prefijo SIGESP sss (seguridad).
+// Agregador del prefijo sss: una subcarpeta por tipo de consulta; añadir un
+// recurso = crear su carpeta (module · controller · service · spec · dto/) y
+// sumarla aquí. entities/ es común a todos los recursos del prefijo.
 @Module({
-  imports: [AppsSigespSharedModule],
-  controllers: [SssController],
-  providers: [SssService],
+  imports: [UsuarioModule],
 })
 export class SssModule {}

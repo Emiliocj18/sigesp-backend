@@ -1,11 +1,11 @@
 import { Test } from '@nestjs/testing';
-import { AuthenticatedUser } from '../../../auth/jwt-payload.interface';
-import { SssService } from './sss.service';
+import { AuthenticatedUser } from '../../../../auth/jwt-payload.interface';
+import { UsuarioService } from './usuario.service';
 
 // Prueba unitaria sin BD real: mockea 'ITenantRepositoryFactory' (patrón de los
 // specs existentes de login/datasource).
-describe('SssService', () => {
-  let service: SssService;
+describe('UsuarioService', () => {
+  let service: UsuarioService;
   const repositoryFactory = { withRepository: jest.fn(), getRepository: jest.fn() };
   const find = jest.fn();
 
@@ -19,11 +19,11 @@ describe('SssService', () => {
     jest.clearAllMocks();
     const moduleRef = await Test.createTestingModule({
       providers: [
-        SssService,
+        UsuarioService,
         { provide: 'ITenantRepositoryFactory', useValue: repositoryFactory },
       ],
     }).compile();
-    service = moduleRef.get(SssService);
+    service = moduleRef.get(UsuarioService);
     repositoryFactory.withRepository.mockImplementation(
       async (_tenantId, _Entity, fn) => fn({ find }),
     );

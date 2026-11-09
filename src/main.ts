@@ -17,7 +17,7 @@ async function bootstrap() {
   app.use(helmet());
 
   // Habilita el parseo de cookies (requerido para la cookie HttpOnly del refresh token)
-  app.use(cookieParser());
+  app.use(cookieParser()); // Interpreta las cookies al recibidas del el front
 
   // CORS configurable por entorno (CORS_ORIGIN separado por comas).
   // Con cookies HttpOnly se requiere origen explícito + credentials (no se permite '*').

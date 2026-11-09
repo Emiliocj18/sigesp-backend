@@ -1,15 +1,15 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { AuthenticatedUser } from '../../../auth/jwt-payload.interface';
-import { Solicitud } from './entities/solicitud.entity';
+import { AuthenticatedUser } from '../../../../auth/jwt-payload.interface';
+import { Solicitud } from '../entities/solicitud.entity';
 import { SolicitudListaDto } from './dto/solicitud-lista.dto';
-import { PaginacionDto } from '../shared/dto/paginacion.dto';
-import { ITenantRepositoryFactory } from '../shared/interfaces/tenant-repository-factory.interface';
+import { PaginacionDto } from '../../shared/dto/paginacion.dto';
+import { ITenantRepositoryFactory } from '../../shared/interfaces/tenant-repository-factory.interface';
 
-// Reglas de negocio del módulo sep (solicitudes). Consulta el repositorio
+// Reglas de negocio del recurso solicitud (sep_solicitud). Consulta el repositorio
 // TypeORM del tenant directamente vía withRepository (B5 + B6); la traducción
 // de estado es regla de negocio del módulo.
 @Injectable()
-export class SepService {
+export class SolicitudService {
   constructor(
     @Inject('ITenantRepositoryFactory')
     private readonly repositoryFactory: ITenantRepositoryFactory,

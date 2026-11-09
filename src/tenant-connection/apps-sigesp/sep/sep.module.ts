@@ -1,12 +1,10 @@
 import { Module } from '@nestjs/common';
-import { AppsSigespSharedModule } from '../shared/apps-sigesp-shared.module';
-import { SepController } from './sep.controller';
-import { SepService } from './sep.service';
+import { SolicitudModule } from './solicitud/solicitud.module';
 
-// Módulo del prefijo SIGESP sep (solicitudes de ejecución presupuestaria).
+// Agregador del prefijo sep: una subcarpeta por tipo de consulta; añadir un
+// recurso = crear su carpeta (module · controller · service · spec · dto/) y
+// sumarla aquí. entities/ es común a todos los recursos del prefijo.
 @Module({
-  imports: [AppsSigespSharedModule],
-  controllers: [SepController],
-  providers: [SepService],
+  imports: [SolicitudModule],
 })
 export class SepModule {}

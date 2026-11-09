@@ -22,7 +22,7 @@ export class BancoService {
     if (user.tenantId == null) {
       throw new Error('El token no contiene información de la empresa (tenant)');
     }
-    const bancos = await this.repositoryFactory.withRepository(
+    const bancos = await this.repositoryFactory.withRepository( //Paso el id de la bd a la que me conecte, la entidad que deseo usar y la (función/Consulta) que voy a ejecutar y el me devuelve el resultado
       user.tenantId,
       Banco,
       (repo) =>

@@ -1,14 +1,14 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { AuthenticatedUser } from '../../../auth/jwt-payload.interface';
-import { SssUsuario } from './entities/sss-usuario.entity';
+import { AuthenticatedUser } from '../../../../auth/jwt-payload.interface';
+import { SssUsuario } from '../entities/sss-usuario.entity';
 import { UsuarioListaDto } from './dto/usuario-lista.dto';
-import { PaginacionDto } from '../shared/dto/paginacion.dto';
-import { ITenantRepositoryFactory } from '../shared/interfaces/tenant-repository-factory.interface';
+import { PaginacionDto } from '../../shared/dto/paginacion.dto';
+import { ITenantRepositoryFactory } from '../../shared/interfaces/tenant-repository-factory.interface';
 
-// Reglas de negocio del módulo sss (seguridad). Consulta el repositorio
+// Reglas de negocio del recurso usuario (sss_usuario). Consulta el repositorio
 // TypeORM del tenant directamente vía withRepository (B5 reintento + B6 paginación).
 @Injectable()
-export class SssService {
+export class UsuarioService {
   constructor(
     @Inject('ITenantRepositoryFactory')
     private readonly repositoryFactory: ITenantRepositoryFactory,
