@@ -1,12 +1,10 @@
 import { Module } from '@nestjs/common';
-import { AppsSigespSharedModule } from '../shared/apps-sigesp-shared.module';
-import { ScbController } from './scb.controller';
-import { ScbService } from './scb.service';
+import { BancoModule } from './banco/banco.module';
 
-// Módulo del prefijo SIGESP scb (cuentas bancarias / tesorería).
+// Agregador del prefijo scb: una subcarpeta por tipo de consulta; añadir un
+// recurso = crear su carpeta (module · controller · service · spec · dto/) y
+// sumarla aquí. entities/ es común a todos los recursos del prefijo.
 @Module({
-  imports: [AppsSigespSharedModule],
-  controllers: [ScbController],
-  providers: [ScbService],
+  imports: [BancoModule],
 })
 export class ScbModule {}

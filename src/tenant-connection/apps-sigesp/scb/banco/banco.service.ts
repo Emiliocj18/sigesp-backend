@@ -1,14 +1,14 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { AuthenticatedUser } from '../../../auth/jwt-payload.interface';
-import { Banco } from './entities/banco.entity';
+import { AuthenticatedUser } from '../../../../auth/jwt-payload.interface';
+import { Banco } from '../entities/banco.entity';
 import { BancoListaDto } from './dto/banco-lista.dto';
-import { PaginacionDto } from '../shared/dto/paginacion.dto';
-import { ITenantRepositoryFactory } from '../shared/interfaces/tenant-repository-factory.interface';
+import { PaginacionDto } from '../../shared/dto/paginacion.dto';
+import { ITenantRepositoryFactory } from '../../shared/interfaces/tenant-repository-factory.interface';
 
-// Reglas de negocio del módulo scb (cuentas bancarias). Consulta el repositorio
+// Reglas de negocio del recurso banco (scb_banco). Consulta el repositorio
 // TypeORM del tenant directamente vía withRepository (B5 reintento + B6 paginación).
 @Injectable()
-export class ScbService {
+export class BancoService {
   constructor(
     @Inject('ITenantRepositoryFactory')
     private readonly repositoryFactory: ITenantRepositoryFactory,
