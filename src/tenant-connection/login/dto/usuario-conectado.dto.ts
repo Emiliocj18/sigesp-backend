@@ -1,4 +1,4 @@
-import { IsNumber, IsString } from 'class-validator';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 
 // DTO de respuesta del usuario autenticado (perfil basico)
 export class UsuarioConectadoDto {
@@ -19,4 +19,17 @@ export class UsuarioConectadoDto {
 
   @IsString()
   tenantName: string;
+
+  // Identidad dentro de la empresa: la usa el perfil para acotar sus consultas.
+  @IsOptional()
+  @IsNumber()
+  idUsuario?: number;
+
+  @IsOptional()
+  @IsNumber()
+  idEmpresa?: number;
+
+  @IsOptional()
+  @IsNumber()
+  idPersonal?: number;
 }

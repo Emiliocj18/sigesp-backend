@@ -8,7 +8,12 @@ describe('SistemaService', () => {
   let service: SistemaService;
   const queryRunner = { query: jest.fn() };
 
-  const user: AuthenticatedUser = { userId: 1, username: 'admin', tenantId: 7 };
+  const user: AuthenticatedUser = {
+    userId: 1,
+    username: 'admin',
+    tenantId: 7,
+    idEmpresa: 1,
+  };
   const sistemas = [
     {
       id_empresa: 1,
@@ -52,7 +57,7 @@ describe('SistemaService', () => {
     expect(queryRunner.query).toHaveBeenCalledWith(
       7,
       expect.stringContaining('sss_usuario_sistema'),
-      ['admin'],
+      ['admin', 1],
     );
   });
 
@@ -70,6 +75,13 @@ describe('SistemaService', () => {
     await expect(
       service.getSistemas({ userId: 1, username: 'admin' }),
     ).rejects.toThrow('El token no contiene información de la empresa (tenant)');
+    expect(queryRunner.query).not.toHaveBeenCalled();
+  });
+
+  it('getSistemas lanza error si el token no trae idEmpresa', async () => {
+    await expect(
+      service.getSistemas({ userId: 1, username: 'admin', tenantId: 7 }),
+    ).rejects.toThrow('El token no contiene el id de la empresa del usuario');
     expect(queryRunner.query).not.toHaveBeenCalled();
   });
 

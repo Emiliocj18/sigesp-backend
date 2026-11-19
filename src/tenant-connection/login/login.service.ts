@@ -49,6 +49,8 @@ export class LoginService {
         .select('u.codusu', 'codusu')
         .addSelect('u.pwdusu', 'pwdusu')
         .addSelect('u.estusu', 'estusu')
+        .addSelect('u.id_usuario', 'idUsuario')
+        .addSelect('u.id_empresa', 'idEmpresa')
         .addSelect('u.id_personal', 'idPersonal')
         .addSelect('e.nomemp', 'nomemp')
         .addSelect('p.nomper', 'nomper')
@@ -78,6 +80,11 @@ export class LoginService {
         username: row.codusu,
         tenantId: conn.connectionId,
         tenantName: conn.name,
+        idUsuario: row.idUsuario,
+        idEmpresa: row.idEmpresa,
+        idPersonal: row.idPersonal,
+        nombre: row.nomper ?? '',
+        apellido: row.apeper ?? '',
       };
 
       // A5: token de acceso corto (15m por defecto) + refresh token largo (7d por defecto)
@@ -98,6 +105,9 @@ export class LoginService {
         apellido: row.apeper ?? '',
         tenantId: conn.connectionId,
         tenantName: conn.name,
+        idUsuario: row.idUsuario,
+        idEmpresa: row.idEmpresa,
+        idPersonal: row.idPersonal,
       };
 
       //Finalmente paso el access_token, refresh_token y el usuario a mi front-end

@@ -19,6 +19,9 @@ export class SistemaService {
     if (user.tenantId == null) {
       throw new Error('El token no contiene información de la empresa (tenant)');
     }
+    if (user.idEmpresa == null) {
+      throw new Error('El token no contiene el id de la empresa del usuario');
+    }
     return this.queryRunner.query<SistemaListaDto>(
       user.tenantId,
       `SELECT us.id_empresa, us.id_usuario, us.codsis,
@@ -28,9 +31,10 @@ export class SistemaService {
        INNER JOIN sss_usuario u ON u.id_empresa = us.id_empresa
            AND u.id_usuario = us.id_usuario
        WHERE u.codusu = $1
+         AND u.id_empresa = $2
          AND s.estsis = '1'
        ORDER BY s.tipsis ASC, us.codsis ASC`,
-      [user.username],
+      [user.username, user.idEmpresa],
     );
   }
 }

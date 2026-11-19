@@ -1,4 +1,4 @@
-import { Injectable, Inject, NotImplementedException } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { IPasswordHasher } from '../../auth/password-hasher.interface';
 import { IDatasourcePasswordVerifier } from './interfaces/datasource-password-verifier.interface';
 
@@ -16,10 +16,9 @@ export class DatasourcePasswordVerifier implements IDatasourcePasswordVerifier {
       return this.passwordHasher.compare(plain, stored);
     }
 
-    // Caso legacy SIGESP: pendiente de implementar (stub).
-    // Por ahora se rechaza explicitamente para no dar un falso positivo.
-    throw new NotImplementedException(
-      'Verificacion de clave legacy SIGESP no implementada todavia',
-    );
+    // Caso legacy SIGESP: ya no se admite. Todas las cuentas migradas a bcrypt;
+    // un valor no-bcrypt se trata como clave invalida (no como error 501).
+    console.warn('[login] pwdusu con formato no soportado (se esperaba bcrypt)');
+    return false;
   }
 }

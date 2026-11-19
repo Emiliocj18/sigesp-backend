@@ -23,7 +23,10 @@ export class ConnectionRepository {
 
   async findAll(): Promise<Connection[]> {
     try {
-      return await this.repo.find();
+      // TODO(active): filtrar por active = 1 cuando el campo esté mantenido.
+      // Hoy las 3 empresas del entorno tienen active = 0 y el login quedaría
+      // sin catálogo. Ver plan de acción §6.3.
+      return await this.repo.find({ order: { name: 'ASC' } });
     } catch (err) {
       throwDbConnectionError('ConnectionRepository.catalogo', err);
     }

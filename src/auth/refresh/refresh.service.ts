@@ -47,6 +47,11 @@ export class RefreshService {
       username: payload.username,
       tenantId: payload.tenantId,
       tenantName: payload.tenantName,
+      idUsuario: payload.idUsuario,
+      idEmpresa: payload.idEmpresa,
+      idPersonal: payload.idPersonal,
+      nombre: payload.nombre,
+      apellido: payload.apellido,
     };
 
     const accessToken = await this.jwtService.signAsync({
@@ -65,10 +70,13 @@ export class RefreshService {
     const usuario: UsuarioConectadoDto = {
       usuario: payload.username,
       empresa: payload.tenantName ?? '',
-      nombre: '',
-      apellido: '',
+      nombre: payload.nombre ?? '',
+      apellido: payload.apellido ?? '',
       tenantId: payload.tenantId ?? 0,
       tenantName: payload.tenantName ?? '',
+      idUsuario: payload.idUsuario,
+      idEmpresa: payload.idEmpresa,
+      idPersonal: payload.idPersonal,
     };
 
     return { access_token: accessToken, refresh_token: newRefreshToken, usuario };
