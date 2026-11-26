@@ -10,6 +10,7 @@ import { ConnectionsModule } from './poolmanager/connections/connection.module';
 import { LoginModule } from './tenant-connection/login/login.module';
 import { AppsSigespModule } from './tenant-connection/apps-sigesp/apps-sigesp.module';
 import { RefreshModule } from './auth/refresh/refresh.module';
+import { SessionModule } from './auth/session/session.module';
 
 // Modulo raiz de la aplicacion
 @Module({
@@ -26,6 +27,7 @@ import { RefreshModule } from './auth/refresh/refresh.module';
     LoginModule,
     AppsSigespModule,
     RefreshModule,
+    SessionModule,
   ],
   providers: [
     // A2: aplica el guard de throttler a todas las rutas

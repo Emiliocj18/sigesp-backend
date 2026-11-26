@@ -15,14 +15,14 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     }
     super({
       // Extrae el token del encabezado Authorization (Bearer)
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), //Esto lee el token
-      ignoreExpiration: false, // Esto indica que si el token ya expiro no lo iginore (devuelve al usuario)
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), //busca en la cabecera (header) la palabra Bearer <token>.(captura el token)
+      ignoreExpiration: false, // Esto indica que si el token ya expiro no lo ignore (devuelve al usuario)
       secretOrKey: secret, // Esto le indica que lea el 'JWT_SECRET'
     });
   }
 
   // Valida y expone el payload en la peticion (req.user), incluyendo el tenant
-  async validate(payload: JwtPayload): Promise<AuthenticatedUser> {
+  async validate(payload: JwtPayload): Promise<AuthenticatedUser> { //Esta función extrae el payload y lo devuelve como se ve en el return de abajo
     return {
       userId: payload.sub,
       username: payload.username,

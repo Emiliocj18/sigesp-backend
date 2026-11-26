@@ -22,6 +22,14 @@ export function validateEnv(config: Record<string, unknown>) {
     errors.push('JWT_SECRET y JWT_REFRESH_SECRET no deben ser iguales.');
   }
 
+  // Allowlist de módulos SSO: opcional. Ausente equivale a "ninguno habilitado".
+  const moduleUrls = config['SSO_MODULE_URLS'];
+  if (moduleUrls !== undefined && typeof moduleUrls !== 'string') {
+    errors.push('SSO_MODULE_URLS debe ser texto con formato CODIGO=url,CODIGO=url.');
+  } else if (moduleUrls === undefined) {
+    config['SSO_MODULE_URLS'] = '';
+  }
+
   if (errors.length) {
     throw new Error(`Configuración inválida:\n- ${errors.join('\n- ')}`);
   }

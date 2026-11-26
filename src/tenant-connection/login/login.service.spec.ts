@@ -1,22 +1,16 @@
 import { Test } from '@nestjs/testing';
 import { UnauthorizedException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
 import { LoginService } from './login.service';
 import { ConnectionService } from '../../poolmanager/connections/connection.service';
 import { DatasourceService } from '../datasource/datasource.service';
+import { TokenIssuerService } from '../../auth/token-issuer.service';
 
 describe('LoginService', () => {
   let service: LoginService;
   const connectionService = { getConnectionById: jest.fn() };
   const datasourceService = { getDataSource: jest.fn() };
   const verifier = { verify: jest.fn() };
-  const jwtService = { signAsync: jest.fn().mockResolvedValue('tok') };
-  const config = {
-    get: jest.fn().mockImplementation((k: string) =>
-      k === 'JWT_REFRESH_SECRET' ? 'ref-secret' : '7d',
-    ),
-  };
+  const tokenIssuer = { issueTokens: jest.fn() };
 
   const queryBuilder = {
     leftJoin: jest.fn().mockReturnThis(),
@@ -42,8 +36,7 @@ describe('LoginService', () => {
         { provide: ConnectionService, useValue: connectionService },
         { provide: DatasourceService, useValue: datasourceService },
         { provide: 'IDatasourcePasswordVerifier', useValue: verifier },
-        { provide: JwtService, useValue: jwtService },
-        { provide: ConfigService, useValue: config },
+        { provide: TokenIssuerService, useValue: tokenIssuer },
       ],
     }).compile();
     service = moduleRef.get(LoginService);
@@ -62,11 +55,23 @@ describe('LoginService', () => {
       apeper: 'A',
     });
     verifier.verify.mockResolvedValue(true);
+    tokenIssuer.issueTokens.mockResolvedValue({
+      access_token: 'tok',
+      refresh_token: 'tok',
+      usuario: { usuario: 'u', empresa: 'E' },
+    });
 
     const result = await service.login(dto);
     expect(result.access_token).toBe('tok');
     expect(result.refresh_token).toBe('tok');
     expect(result.usuario.usuario).toBe('u');
+    expect(tokenIssuer.issueTokens).toHaveBeenCalledWith(
+      expect.objectContaining({
+        username: 'u',
+        tenantId: 1,
+        empresaNombre: 'E',
+      }),
+    );
   });
 
   it('login lanza UnauthorizedException si el usuario no existe', async () => {

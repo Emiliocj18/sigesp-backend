@@ -5,9 +5,6 @@ import {
   HttpStatus,
   Inject,
 } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
-import { randomUUID } from 'crypto';
 import { ConnectionService } from '../../poolmanager/connections/connection.service';
 import { DatasourceService } from '../datasource/datasource.service';
 import { IDatasourcePasswordVerifier } from '../datasource/interfaces/datasource-password-verifier.interface';
@@ -17,6 +14,7 @@ import { SnoPersonal } from '../datasource/entities/sno-personal.entity';
 import { ConexDto } from './dto/conex.dto';
 import { UsuarioConectadoDto } from './dto/usuario-conectado.dto';
 import { JwtPayload } from '../../auth/jwt-payload.interface';
+import { TokenIssuerService } from '../../auth/token-issuer.service';
 
 // Logica de login multitenant: orquesta connections + tenant
 @Injectable()
@@ -26,8 +24,7 @@ export class LoginService {
     private readonly datasourceService: DatasourceService,
     @Inject('IDatasourcePasswordVerifier')
     private readonly datasourcePasswordVerifier: IDatasourcePasswordVerifier,
-    private readonly jwtService: JwtService,
-    private readonly config: ConfigService,
+    private readonly tokenIssuer: TokenIssuerService,
   ) {}
 
   async login(
@@ -80,6 +77,7 @@ export class LoginService {
         username: row.codusu,
         tenantId: conn.connectionId,
         tenantName: conn.name,
+        empresaNombre: row.nomemp?.trim() || conn.name,
         idUsuario: row.idUsuario,
         idEmpresa: row.idEmpresa,
         idPersonal: row.idPersonal,
@@ -87,31 +85,8 @@ export class LoginService {
         apellido: row.apeper ?? '',
       };
 
-      // A5: token de acceso corto (15m por defecto) + refresh token largo (7d por defecto)
-      const jti = randomUUID();
-      const accessToken = await this.jwtService.signAsync({ ...payload, jti, type: 'access' });
-
-      const refreshSecret = this.config.get<string>('JWT_REFRESH_SECRET');
-      const refreshTtl = this.config.get<string>('REFRESH_TOKEN_TTL') ?? '7d';
-      const refreshToken = await this.jwtService.signAsync(
-        { ...payload, jti, type: 'refresh' },
-        { secret: refreshSecret, expiresIn: refreshTtl },
-      );
-
-      const usuario: UsuarioConectadoDto = {
-        usuario: row.codusu,
-        empresa: row.nomemp ?? conn.name,
-        nombre: row.nomper ?? '',
-        apellido: row.apeper ?? '',
-        tenantId: conn.connectionId,
-        tenantName: conn.name,
-        idUsuario: row.idUsuario,
-        idEmpresa: row.idEmpresa,
-        idPersonal: row.idPersonal,
-      };
-
-      //Finalmente paso el access_token, refresh_token y el usuario a mi front-end
-      return { access_token: accessToken, refresh_token: refreshToken, usuario };
+      // A5: emisión común (access 15m + refresh 7d) con el perfil sin conexionDB
+      return this.tokenIssuer.issueTokens(payload);
     } catch (err) {
       console.error('[LoginService.login]', err);
       if (err instanceof HttpException) throw err;

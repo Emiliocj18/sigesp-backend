@@ -5,6 +5,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtStrategy } from './jwt.strategy';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { PasswordHasher } from './password-hasher';
+import { TokenIssuerService } from './token-issuer.service';
+import { TokenDenylistService } from '../shared/security/token-denylist.service';
 
 // Modulo de autenticacion JWT (estrategia, guard y servicio de tokens) - global
 @Global()
@@ -29,7 +31,14 @@ import { PasswordHasher } from './password-hasher';
       },
     }),
   ],
-  providers: [JwtStrategy, JwtAuthGuard, { provide: 'IPasswordHasher', useClass: PasswordHasher }],
-  exports: [JwtModule, JwtAuthGuard, 'IPasswordHasher'],
+  // La denylist vive aquí para que login, refresh y sesión compartan instancia.
+  providers: [
+    JwtStrategy,
+    JwtAuthGuard,
+    TokenIssuerService,
+    TokenDenylistService,
+    { provide: 'IPasswordHasher', useClass: PasswordHasher },
+  ],
+  exports: [JwtModule, JwtAuthGuard, TokenIssuerService, TokenDenylistService, 'IPasswordHasher'],
 })
 export class JwtAuthModule {}

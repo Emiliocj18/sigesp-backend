@@ -9,4 +9,6 @@ export class SistemaListaDto {
   imgsis: string;
   accsis: string;
   tipsis: number;
+  // URL raíz del módulo resuelta por entorno (SSO_MODULE_URLS); null = mantenimiento.
+  url: string | null;
 }

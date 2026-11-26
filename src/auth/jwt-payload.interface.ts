@@ -5,6 +5,9 @@ export interface JwtPayload {
   // Campos de tenant (login multitenant). Opcionales para no romper el login de admin.
   tenantId?: number;
   tenantName?: string;
+  // Nombre visible de la empresa (cfg_empresa.nomemp). Se propaga en los tokens
+  // para que login, refresh y sesión devuelvan el mismo usuario.empresa.
+  empresaNombre?: string;
   // Identidad del usuario dentro de la empresa (scope de escritura del perfil).
   idUsuario?: number;
   idEmpresa?: number;
